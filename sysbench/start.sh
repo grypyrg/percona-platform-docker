@@ -7,7 +7,7 @@ MYSQL_PORT=$DB_PORT_3306_TCP_PORT
 while ! nc $MYSQL_HOST $MYSQL_PORT </dev/null; do sleep 1; done
 
 
-mysql -u root -psecret -h $MYSQL_HOST -P $MYSQL_PORT -e "create database sbtest"
+mysql -u root -psecret -h $MYSQL_HOST -P $MYSQL_PORT -e "CREATE DATABASE IF NOT EXISTS sbtest"
 
 sysbench \
 	--test=/usr/share/doc/sysbench/tests/db/parallel_prepare.lua \
