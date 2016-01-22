@@ -3,6 +3,14 @@
 MYSQL_HOST=$DB_PORT_3306_TCP_ADDR
 MYSQL_PORT=$DB_PORT_3306_TCP_PORT
 
+if [ -z "$TEST" ]; then
+	TEST=oltp
+fi
+
+if [ -z "$TXRATE" ]; then
+	TXRATE=10
+fi
+
 # here we wait until mysql becomes reachable, then we can start sysbench
 while ! nc $MYSQL_HOST $MYSQL_PORT </dev/null; do sleep 1; done
 
@@ -28,7 +36,7 @@ sysbench \
 
 sysbench \
 	--db-driver=mysql \
-        --test=/usr/share/doc/sysbench/tests/db/oltp.lua \
+        --test=/usr/share/doc/sysbench/tests/db/$TEST.lua \
 	--mysql-table-engine=innodb \
 	--mysql-user=root \
 	--mysql-password=secret \
@@ -41,5 +49,5 @@ sysbench \
 	--num-threads=4 \
 	--max-requests=0 \
 	--max-time=0 \
-	--tx-rate=20 \
+	--tx-rate=$TXRATE \
 	run | grep -v "queue length"
