@@ -1,30 +1,71 @@
-percona-server-platform-1:
+consul:
+  image: progrium/consul
+  command: ["-server","-bootstrap","-ui-dir","/ui"]
+  ports:
+    - :53:53
+    - :8300-8302:8300-8302
+    - :8400:8400 
+    - :8500:8500
+registrator:
+  image: gliderlabs/registrator:master
+  links:
+   - consul
+  command: ["-internal=true","-retry-attempts=-1", "-retry-interval=1000", "consul://consul:8500"]
+  volumes:
+    - /var/run/docker.sock:/tmp/docker.sock
+server-oltp:
   build: server
   links: 
-    - percona-platform:platform
+    - platform
   environment:
     - MYSQL_ROOT_PASSWORD=secret
   ports:
     - :3306:3306
-percona-server-platform-2:
+server-oltp-prom-mysqld:
+  image: prom/mysqld-exporter
+  links:
+    - server-oltp:db
+    - consul
+  environment:
+    - DATA_SOURCE_NAME=root:secret@tcp(db:3306)/sbtest
+  ports:
+    - :9104:9104
+server-update:
   build: server
   links: 
-    - percona-platform:platform
+    - platform
   environment:
     - MYSQL_ROOT_PASSWORD=secret
-sysbench-1:
+server-update-prom-mysqld:
+  image: prom/mysqld-exporter
+  links:
+    - server-update:db
+    - consul
+  environment:
+    - DATA_SOURCE_NAME=root:secret@tcp(db:3306)/sbtest
+  ports:
+    - :9105:9104
+sysbench-oltp:
    build: sysbench
    links: 
-    - percona-server-platform-1:db
-sysbench-2:
+    - server-oltp:db
+   environment:
+    - TXRATE=10
+    - TEST=oltp
+sysbench-update:
    build: sysbench
    links: 
-    - percona-server-platform-2:db
-percona-platform:
-  image: percona/percona-platform
+    - server-update:db
+   environment:
+    - TXRATE=10
+    - TEST=update_index
+platform:
+  build: platform
+  links:
+    - consul
   environment:
     - API_HOSTNAME=platform
-    - NODE_IP=percona-server-platform-1
+    - NODE_IP=invalid
   ports:
     - :3000:3000
     - :8000:8000
