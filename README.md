@@ -11,7 +11,7 @@ At this moment, only percona-agent is configured, no prometheus exporters work a
 ## How To Run
 
 ## Prep Config
-edit the `docker-compose.yml` and edit the 192.169.99.100 ip address and change it to your docker machine's IP address (this is the automatic IP address used by Docker 4 OSX)
+edit the `docker-compose.yml` and edit the 192.168.99.100 ip address and change it to your docker machine's IP address (this is the automatic IP address used by Docker 4 OSX)
 
 ## Build Environment
 
