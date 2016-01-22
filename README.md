@@ -6,11 +6,11 @@ This will setup:
 - 2 sysbench containers each running a benchmark on a `percona server` container
 - 1 percona platform
 
-At this moment, only percona-agent is configured, no prometheus exporters work at this mometn
+At this moment, only percona-agent is configured, no Prometheus exporters work as of yet.
 
 ## Prerequisites
 
-Ensure you have `docker` and `docker-compose` installed. This came automagically when installing `Docker Toolbox` for OSX.
+Ensure you have `docker` and `docker-compose` installed. This came automagically when installing `Docker Toolbox` for OSX, available here: https://www.docker.com/docker-toolbox.
 
 
 ## Build Environment
