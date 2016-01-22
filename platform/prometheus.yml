@@ -10,7 +10,7 @@ scrape_configs:
 
   consul_sd_configs:
   - server:   'consul:8500'
-    services: ['mysqld-exporter']
+    services: ['mysqld-exporter', 'node-exporter']
 
   relabel_configs:
   - source_labels: ['__meta_consul_service']
@@ -21,10 +21,10 @@ scrape_configs:
     regex:         '(.*);(.*)'
     target_label:  '__address__'
     replacement:   '$1:$2'
-  - source_labels: ['__meta_consul_service_address']
-    regex:         '(.*)'
+  - source_labels: ['__meta_consul_service','__meta_consul_service_address']
+    regex:         '(.*)-exporter;(.*)'
     target_label:  'alias'
-    replacement:   '$1'
+    replacement:   '$1-$2'
   - source_labels: ['__meta_consul_service_address']
     regex:         '(.*)'
     target_label:  'instance'

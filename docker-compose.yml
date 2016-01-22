@@ -45,6 +45,10 @@ server-update-prom-mysqld:
     - DATA_SOURCE_NAME=root:secret@tcp(db:3306)/sbtest
   ports:
     - :9105:9104
+prom-node-exporter:
+  image: prom/node-exporter
+  ports:
+    - :9100:9100
 sysbench-oltp:
    build: sysbench
    links: 
