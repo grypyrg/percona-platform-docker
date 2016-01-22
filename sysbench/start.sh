@@ -1,11 +1,13 @@
 #!/bin/bash -e
 
+MYSQL_HOST=$DB_PORT_3306_TCP_ADDR
+MYSQL_PORT=$DB_PORT_3306_TCP_PORT
+
 # here we wait until mysql becomes reachable, then we can start sysbench
 while ! nc $MYSQL_HOST $MYSQL_PORT </dev/null; do sleep 1; done
 
 
-
-mysql -u root -psecret -e "create database sbtest"
+mysql -u root -psecret -h $MYSQL_HOST -P $MYSQL_PORT -e "create database sbtest"
 
 sysbench \
 	--test=/usr/share/doc/sysbench/tests/db/parallel_prepare.lua \

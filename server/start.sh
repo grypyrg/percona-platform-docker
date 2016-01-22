@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+
+API_HOSTNAME=$PLATFORM_PORT_9001_TCP_ADDR
+
 if [ -z "$API_HOSTNAME" -a -z "$MYSQL_ROOT_PASSWORD" ]; then
 	echo >&2 'error: percona agent API_HOSTNAME is not specified'
 	echo >&2 '  You need to specify API_HOSTNAME and $MYSQL_ROOT_PASSWORD'
