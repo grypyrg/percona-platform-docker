@@ -5,7 +5,7 @@ percona-server-platform-1:
   environment:
     - MYSQL_ROOT_PASSWORD=secret
   ports:
-    - 192.168.99.100:3306:3306
+    - :3306:3306
 percona-server-platform-2:
   build: server
   links: 
@@ -26,6 +26,6 @@ percona-platform:
     - API_HOSTNAME=platform
     - NODE_IP=percona-server-platform-1
   ports:
-    - 192.168.99.100:3000:3000
-    - 192.168.99.100:8000:8000
-    - 192.168.99.100:9001:9001
+    - :3000:3000
+    - :8000:8000
+    - :9001:9001
