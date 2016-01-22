@@ -1,0 +1,39 @@
+percona-server-platform-1:
+  build: server
+  links: 
+    - percona-platform
+  environment:
+    - API_HOSTNAME=percona-platform
+    - MYSQL_ROOT_PASSWORD=secret
+  ports:
+    - 192.168.99.100:3306:3306
+percona-server-platform-2:
+  build: server
+  links: 
+    - percona-platform
+  environment:
+    - API_HOSTNAME=percona-platform
+    - MYSQL_ROOT_PASSWORD=secret
+sysbench-1:
+   build: sysbench
+   links: 
+    - percona-server-platform-1
+   environment:
+    - MYSQL_HOST=percona-server-platform-1
+    - MYSQL_PORT=3306
+sysbench-2:
+   build: sysbench
+   links: 
+    - percona-server-platform-2
+   environment:
+    - MYSQL_HOST=percona-server-platform-2
+    - MYSQL_PORT=3306
+percona-platform:
+  image: percona/percona-platform
+  environment:
+    - API_HOSTNAME=percona-platform
+    - NODE_IP=percona-server-platform-1
+  ports:
+    - 192.168.99.100:3000:3000
+    - 192.168.99.100:8000:8000
+    - 192.168.99.100:9001:9001
