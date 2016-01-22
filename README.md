@@ -12,9 +12,6 @@ At this moment, only percona-agent is configured, no prometheus exporters work a
 
 Ensure you have `docker` and `docker-compose` installed. This came automagically when installing `Docker Toolbox` for OSX.
 
-## Prep Config
-
-edit the `docker-compose.yml` and edit the 192.168.99.100 ip address and change it to your docker machine's IP address (this is the automatic IP address used by Docker 4 OSX)
 
 ## Build Environment
 
@@ -30,7 +27,7 @@ docker-compose up
 
 ## Go to web interface
 
-Percona QAN will be listening on `http://192.168.99.100:8000`
+Percona QAN will be listening on `http://192.168.99.100:8000`, where `192.168.99.100` is the IP address of the machine running docker containers
 
 
 ## Remove environment
