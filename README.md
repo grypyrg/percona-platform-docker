@@ -8,8 +8,6 @@ This will setup:
 
 At this moment, only percona-agent is configured, no prometheus exporters work at this mometn
 
-## How To Run
-
 ## Prerequisites
 
 Ensure you have `docker` and `docker-compose` installed. This came automagically when installing `Docker Toolbox` for OSX.
@@ -34,4 +32,16 @@ docker-compose up
 
 Percona QAN will be listening on `http://192.168.99.100:8000`
 
+
+## Remove environment
+
+Just run:
+
+```
+docker-compose rm
+```
+
+## NOTES
+
+- This tool does not yet support stop and start, `percona-platform` actually fails on this
 
