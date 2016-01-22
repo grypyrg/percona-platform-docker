@@ -1,4 +1,4 @@
-# percona-platform-docker
+# percona-platform-docker DEMO Setup
 
 This will setup:
 
