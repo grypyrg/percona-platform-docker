@@ -49,6 +49,7 @@ It takes a while before the whole environment is up and running, but just try to
 Just run:
 
 ```
+docker-compose stop
 docker-compose rm
 ```
 
