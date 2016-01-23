@@ -9,8 +9,10 @@ consul:
 registrator:
   image: gliderlabs/registrator:master
   links:
-   - consul
+    - consul
   command: ["-internal=true","-retry-attempts=-1", "-retry-interval=1000", "consul://consul:8500"]
+  security_opt:
+    - label:type:docker_t
   volumes:
     - /var/run/docker.sock:/tmp/docker.sock
 server-oltp:
