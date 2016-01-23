@@ -31,14 +31,17 @@ docker-compose build
 ## Bring Environment UP
 
 ```
-docker-compose up
+docker-compose up -d
 ```
+
 
 ## Go to web interfaces
 
+It takes a while before the whole environment is up and running, but just try to go to the different interfaces:
+
 - Percona QAN will be listening on `http://192.168.99.100:8000`, where `192.168.99.100` is the IP address of the machine running docker containers
-- Consul UI is available at `http://192.168.99.100:8500/ui`.
 - Grafana is accessible on `http://192.168.99.100:3000/`, username:password is `admin:admin`.
+- Consul UI is available at `http://192.168.99.100:8500/ui` (used for service discovery).
 
 
 ## Remove environment
