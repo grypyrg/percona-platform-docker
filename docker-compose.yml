@@ -6,6 +6,8 @@ consul:
     - :8300-8302:8300-8302
     - :8400:8400 
     - :8500:8500
+  environment:
+    - SERVICE_IGNORE=true
 registrator:
   image: gliderlabs/registrator:master
   links:
@@ -15,42 +17,103 @@ registrator:
     - label:type:docker_t
   volumes:
     - /var/run/docker.sock:/tmp/docker.sock
+  environment:
+    - SERVICE_IGNORE=true
 server-oltp:
   build: server
   links: 
     - platform
   environment:
     - MYSQL_ROOT_PASSWORD=secret
+    - SERVICE_IGNORE=true
   ports:
     - :3306:3306
-server-oltp-prom-mysqld:
+server-oltp-prom-mysqld-hr:
   image: prom/mysqld-exporter
   links:
     - server-oltp:db
     - consul
   environment:
     - DATA_SOURCE_NAME=root:secret@tcp(db:3306)/sbtest
+    - SERVICE_9104_NAME=mysqld-hr
+    - SERVICE_TAGS=oltp
   ports:
     - :9104:9104
+  command: ["-web.listen-address=:9104","-collect.global_status=true","-collect.global_variables=false","-collect.slave_status=false","-collect.info_schema.tables=false","-collect.binlog_size=false","-collect.info_schema.processlist=false","-collect.info_schema.userstats=false","-collect.info_schema.tables=false","-collect.auto_increment.columns=false","-collect.info_schema.tablestats=false","-collect.perf_schema.file_events=false","-collect.perf_schema.eventsstatements=false","-collect.perf_schema.indexiowaits=false","-collect.perf_schema.tableiowaits=false","-collect.perf_schema.tablelocks=false","-collect.perf_schema.eventswaits=false"]
+server-oltp-prom-mysqld-mr:
+  image: prom/mysqld-exporter
+  links:
+    - server-oltp:db
+    - consul
+  environment:
+    - DATA_SOURCE_NAME=root:secret@tcp(db:3306)/sbtest
+    - SERVICE_9114_NAME=mysqld-mr
+    - SERVICE_TAGS=oltp
+  ports:
+    - :9114:9114
+  command: ["-web.listen-address=:9114","-collect.global_status=false","-collect.global_variables=false","-collect.slave_status=true","-collect.info_schema.tables=false","-collect.binlog_size=false","-collect.info_schema.processlist=true","-collect.info_schema.userstats=false","-collect.info_schema.tables=false","-collect.auto_increment.columns=false","-collect.info_schema.tablestats=false","-collect.perf_schema.file_events=true","-collect.perf_schema.eventsstatements=false","-collect.perf_schema.indexiowaits=false","-collect.perf_schema.tableiowaits=false","-collect.perf_schema.tablelocks=false","-collect.perf_schema.eventswaits=true"]
+server-oltp-prom-mysqld-lr:
+  image: prom/mysqld-exporter
+  links:
+    - server-oltp:db
+    - consul
+  environment:
+    - DATA_SOURCE_NAME=root:secret@tcp(db:3306)/sbtest
+    - SERVICE_9124_NAME=mysqld-lr
+    - SERVICE_TAGS=oltp
+  ports:
+    - :9124:9124
+  command: ["-web.listen-address=:9124","-collect.global_status=false","-collect.global_variables=true","-collect.slave_status=false","-collect.info_schema.tables=true","-collect.binlog_size=false","-collect.info_schema.processlist=false","-collect.info_schema.userstats=true","-collect.info_schema.tables=true","-collect.auto_increment.columns=true","-collect.info_schema.tablestats=true","-collect.perf_schema.file_events=false","-collect.perf_schema.eventsstatements=true","-collect.perf_schema.indexiowaits=true","-collect.perf_schema.tableiowaits=true","-collect.perf_schema.tablelocks=false","-collect.perf_schema.eventswaits=false"]
 server-update:
   build: server
   links: 
     - platform
   environment:
     - MYSQL_ROOT_PASSWORD=secret
-server-update-prom-mysqld:
+    - SERVICE_IGNORE=true
+server-update-prom-mysqld-hr:
   image: prom/mysqld-exporter
   links:
     - server-update:db
     - consul
   environment:
     - DATA_SOURCE_NAME=root:secret@tcp(db:3306)/sbtest
+    - SERVICE_9104_NAME=mysqld-hr
+    - SERVICE_TAGS=update_index
   ports:
     - :9105:9104
+  command: ["-web.listen-address=:9104","-collect.global_status=true","-collect.global_variables=false","-collect.slave_status=false","-collect.info_schema.tables=false","-collect.binlog_size=false","-collect.info_schema.processlist=false","-collect.info_schema.userstats=false","-collect.info_schema.tables=false","-collect.auto_increment.columns=false","-collect.info_schema.tablestats=false","-collect.perf_schema.file_events=false","-collect.perf_schema.eventsstatements=false","-collect.perf_schema.indexiowaits=false","-collect.perf_schema.tableiowaits=false","-collect.perf_schema.tablelocks=false","-collect.perf_schema.eventswaits=false"]
+server-update-prom-mysqld-mr:
+  image: prom/mysqld-exporter
+  links:
+    - server-update:db
+    - consul
+  environment:
+    - DATA_SOURCE_NAME=root:secret@tcp(db:3306)/sbtest
+    - SERVICE_9114_NAME=mysqld-mr
+    - SERVICE_TAGS=update_index
+  ports:
+    - :9115:9114
+  command: ["-web.listen-address=:9114","-collect.global_status=false","-collect.global_variables=false","-collect.slave_status=true","-collect.info_schema.tables=false","-collect.binlog_size=false","-collect.info_schema.processlist=true","-collect.info_schema.userstats=false","-collect.info_schema.tables=false","-collect.auto_increment.columns=false","-collect.info_schema.tablestats=false","-collect.perf_schema.file_events=true","-collect.perf_schema.eventsstatements=false","-collect.perf_schema.indexiowaits=false","-collect.perf_schema.tableiowaits=false","-collect.perf_schema.tablelocks=false","-collect.perf_schema.eventswaits=true"]
+server-update-prom-mysqld-lr:
+  image: prom/mysqld-exporter
+  links:
+    - server-update:db
+    - consul
+  environment:
+    - DATA_SOURCE_NAME=root:secret@tcp(db:3306)/sbtest
+    - SERVICE_9124_NAME=mysqld-lr
+    - SERVICE_TAGS=update_index
+  ports:
+    - :9125:9124
+  command: ["-web.listen-address=:9124","-collect.global_status=false","-collect.global_variables=true","-collect.slave_status=false","-collect.info_schema.tables=true","-collect.binlog_size=false","-collect.info_schema.processlist=false","-collect.info_schema.userstats=true","-collect.info_schema.tables=true","-collect.auto_increment.columns=true","-collect.info_schema.tablestats=true","-collect.perf_schema.file_events=false","-collect.perf_schema.eventsstatements=true","-collect.perf_schema.indexiowaits=true","-collect.perf_schema.tableiowaits=true","-collect.perf_schema.tablelocks=false","-collect.perf_schema.eventswaits=false"]
 prom-node-exporter:
   image: prom/node-exporter
   ports:
     - :9100:9100
+  environment:
+    - SERVICE_NAME=node-hr
+    - SERVICE_TAGS=physical_host
 sysbench-oltp:
    build: sysbench
    links: 
@@ -58,6 +121,7 @@ sysbench-oltp:
    environment:
     - TXRATE=10
     - TEST=oltp
+    - SERVICE_IGNORE=true
 sysbench-update:
    build: sysbench
    links: 
@@ -65,6 +129,7 @@ sysbench-update:
    environment:
     - TXRATE=10
     - TEST=update_index
+    - SERVICE_IGNORE=true
 platform:
   build: platform
   links:
@@ -72,6 +137,7 @@ platform:
   environment:
     - API_HOSTNAME=platform
     - NODE_IP=invalid
+    - SERVICE_IGNORE=true
   ports:
     - :3000:3000
     - :8000:8000
