@@ -10,7 +10,7 @@ fi
 
 set -eu
 
-/entrypoint.sh mysqld & 
+/entrypoint.sh mysqld --userstat=1 & 
 
 
 
