@@ -4,23 +4,66 @@ global:
 
 
 scrape_configs:
-- job_name: mysqld-hr
-  scrape_interval:    1s
-  scrape_timeout:     1s
 
-- job_name: mysqld-mr
-  scrape_interval:    5s
-  scrape_timeout:     1s
-
-- job_name: mysqld-lr
+- job_name: 'overwritten-default-lr'
   scrape_interval:   60s
   scrape_timeout:     5s
 
-- job_name: 'overwritten-default'
+  consul_sd_configs:
+  - server:   'consul:8500'
+    services: ['mysqld-lr']
+
+  relabel_configs:
+  - source_labels: ['__meta_consul_service']
+    regex:         '(.*)'
+    target_label:  'job'
+    replacement:   '$1'
+  - source_labels: ['__meta_consul_service_address','__meta_consul_service_port']
+    regex:         '(.*);(.*)'
+    target_label:  '__address__'
+    replacement:   '$1:$2'
+  - source_labels: ['__meta_consul_service','__meta_consul_tags']
+    regex:         '(.*)-..;,(.*),'
+    target_label:  'alias'
+    replacement:   '$1-$2'
+  - source_labels: ['__meta_consul_service_address']
+    regex:         '(.*)'
+    target_label:  'instance'
+    replacement:   '$1'
+
+- job_name: 'overwritten-default-mr'
+  scrape_interval:    5s
+  scrape_timeout:     1s
 
   consul_sd_configs:
   - server:   'consul:8500'
-    services: ['mysqld-hr', 'mysqld-mr', 'mysqld-lr', 'node-hr']
+    services: ['mysqld-mr']
+
+  relabel_configs:
+  - source_labels: ['__meta_consul_service']
+    regex:         '(.*)'
+    target_label:  'job'
+    replacement:   '$1'
+  - source_labels: ['__meta_consul_service_address','__meta_consul_service_port']
+    regex:         '(.*);(.*)'
+    target_label:  '__address__'
+    replacement:   '$1:$2'
+  - source_labels: ['__meta_consul_service','__meta_consul_tags']
+    regex:         '(.*)-..;,(.*),'
+    target_label:  'alias'
+    replacement:   '$1-$2'
+  - source_labels: ['__meta_consul_service_address']
+    regex:         '(.*)'
+    target_label:  'instance'
+    replacement:   '$1'
+
+- job_name: 'overwritten-default-hr'
+  scrape_interval:    1s
+  scrape_timeout:     1s
+
+  consul_sd_configs:
+  - server:   'consul:8500'
+    services: ['mysqld-hr', 'node-hr']
 
   relabel_configs:
   - source_labels: ['__meta_consul_service']
