@@ -11,7 +11,7 @@ It can also be very useful for automatic testing of new releases of our docker i
 This will setup:
 
 - 2 `percona server` servers, with `percona-agent`
-- 2 containers `mysqld_exporter` for prometheus monitoring of the mysql servers
+- 6 containers `mysqld_exporter` for prometheus monitoring of the mysql servers
 - 2 sysbench containers each running a benchmark on a `percona server` container
 - 1 prometheus node monitor (for OS Metrics)
 - 1 percona platform (based on Daniel's docker container)
