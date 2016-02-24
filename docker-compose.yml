@@ -12,7 +12,7 @@ registrator:
   image: gliderlabs/registrator:master
   links:
     - consul
-  command: ["-internal=true","-retry-attempts=-1", "-retry-interval=1000", "consul://consul:8500"]
+  command: ["-internal=true","-retry-attempts=-1", "-retry-interval=1000", "-resync=60", "consul://consul:8500"]
   security_opt:
     - label:type:docker_t
   volumes:
