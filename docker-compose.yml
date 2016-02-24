@@ -19,10 +19,23 @@ registrator:
     - /var/run/docker.sock:/tmp/docker.sock
   environment:
     - SERVICE_IGNORE=true
+pmm:
+  build: pmm
+  links:
+    - consul
+  environment:
+    - HOST_IP=pmm
+    - MYSQL_IP=invalid
+    - SERVICE_IGNORE=true
+  ports:
+    - :3000:3000
+    - :8000:8000
+    - :9001:9001
+    - :9090:9090
 server-oltp:
   build: server
   links: 
-    - platform
+    - pmm
   environment:
     - MYSQL_ROOT_PASSWORD=secret
     - SERVICE_IGNORE=true
@@ -67,7 +80,7 @@ server-oltp-prom-mysqld-lr:
 server-update:
   build: server
   links: 
-    - platform
+    - pmm
   environment:
     - MYSQL_ROOT_PASSWORD=secret
     - SERVICE_IGNORE=true
@@ -130,16 +143,3 @@ sysbench-update:
     - TXRATE=10
     - TEST=update_index
     - SERVICE_IGNORE=true
-platform:
-  build: platform
-  links:
-    - consul
-  environment:
-    - API_HOSTNAME=platform
-    - NODE_IP=invalid
-    - SERVICE_IGNORE=true
-  ports:
-    - :3000:3000
-    - :8000:8000
-    - :9001:9001
-    - :9090:9090
