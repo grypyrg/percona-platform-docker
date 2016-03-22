@@ -35,5 +35,5 @@ while ! nc $HOST_IP 9001 </dev/null; do sleep 1; done
 ./install -socket=/var/lib/mysql/mysql.sock -password=$MYSQL_ROOT_PASSWORD -user=root $HOST_IP
 
 
-tail -f /usr/local/percona/agent/percona-agent.log
+tail -f /usr/local/percona/agent/percona-qan-agent.log
 
