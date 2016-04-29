@@ -19,10 +19,10 @@ set -eu
 export HOSTNAME="${HOSTNAME:-"$(hostname -f)"}"
 
 cd ~
-PKG="ppl-agent"
+PKG="percona-qan-agent"
 [ -d $PKG ] && rm -rf $PKG
 mkdir $PKG
-curl -LO https://www.percona.com/downloads/TESTING/ppl/open-source/${PKG}.tar.gz
+curl -LO https://www.percona.com/downloads/TESTING/pmm/open-source/${PKG}.tar.gz
 tar xvfz ${PKG}.tar.gz -C $PKG
 cd $PKG/*
 
